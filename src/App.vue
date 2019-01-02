@@ -1,28 +1,52 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template>  
+  <div id="app">  
+  <router-view :activeUser="activeUser"/>  
+    <footer class="info">  
+      <p v-if="activeUser" class="logout-link"><a @click="handleLogout" href="#">Logout</a></p>  
+      <p>Based on a project written by <a href="http://evanyou.me">Evan You</a></p>  
+      <p>Original Vue TodoApp project is <a href="https://vuejs.org/v2/examples/todomvc.html">here</a></p>  
+      <p>Modified for this tutorial by Andrew Hughes</p>  
+    </footer> 
   </div>
-</template>
+</template>  
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<script>  
+  // app Vue instance  
+  const app = {
+    name: 'app',  
+    // app initial state  
+    data: () => {  
+      return {  
+        activeUser: null  
+      }  
+    },  
+  
+  async created () {  
+    await this.refreshActiveUser()  
+  },  
+  
+  watch: {  
+    '$route': 'refreshActiveUser'  
+  },  
+  
+  methods: {  
+    async refreshActiveUser () {  
+      this.activeUser = await this.$auth.getUser()  
+      this.$log.debug('activeUser',this.activeUser)  
+    },  
+  
+    async handleLogout () {  
+      await this.$auth.logout()  
+      await this.refreshActiveUser()  
+      this.$router.go('/')  
+    }  
+  },
+}  
+  
+export default app  
+  
+</script>  
+  
+<style>  
+  [v-cloak] { display: none; }  
 </style>
