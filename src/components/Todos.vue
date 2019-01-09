@@ -146,7 +146,7 @@
     // note there's no DOM manipulation here at all.
    methods: {  
   
-        addTodo: function () {  
+        addTodo: function () {
             var value = this.newTodo && this.newTodo.trim()  
             if (!value) {  
             return
